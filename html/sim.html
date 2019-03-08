@@ -2,8 +2,31 @@
 <html>
 <head>
     <link rel="icon" type="image/x-icon" href="../favicon.ico" />
-</head>
-<body onload="getNewSimulation()">
     <script src="../js/main.js"></script>
+    <title>FYP-Client</title>
+</head>
+<body>
+    <div id="bar">
+        <div id="bar-info">
+            <strong>Simulation: <div id="sim-id">-</div></strong>
+        </div>
+        <div id="bar-buttons">
+            <button onclick="getNewSimulation()">New Sim</button>
+            <button onclick="shutdown()">Shutdown</button>
+        </div>
+    </div>
+    <div>   
+        <div id="sim-info">
+            <div id="sim-img"></div>
+            <div id="sim-overview"></div>
+        </div>
+        <div id="sim-controls">
+            <button>Run</button>
+            <button>Stop</button>
+            <button>Add Vehicle</button>
+        </div>
+    </div>
+    <div id="error-text">
+    </div>
 </body>
 </html>
