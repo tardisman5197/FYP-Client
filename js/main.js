@@ -27,11 +27,10 @@ function getNewSimulation() {
         console.log(data)
         if (!checkError(data)) {
             window.simKey = data.key
-            document.getElementById("sim-id").innerHTML = window.simKey
+            document.getElementById("sim-id").innerHTML = "Simulation: <strong>" + window.simKey +"</strong>"
             document.getElementById("bar-btns").innerHTML = "\
-            <button onclick=\"removeSimulation()\" id=\"newSim-btn\">Remove Simulation</button>\
-            <button onclick=\"shutdown()\">Shutdown</button>"
-            console.log("Change btn")
+            <button onclick=\"removeSimulation()\" class=\"btn btn-warning\" id=\"newSim-btn\">Remove Simulation</button>\
+            <button onclick=\"shutdown()\" class=\"btn btn-danger\">Shutdown</button>"
         }
     }
     // Send request
@@ -57,10 +56,10 @@ function removeSimulation() {
         var data = JSON.parse(this.response);
         console.log(data)
         if (!checkError(data)) {
-            document.getElementById("sim-id").innerHTML = "-"
+            document.getElementById("sim-id").innerHTML = "Simulation: <strong>-</strong>"
             document.getElementById("bar-btns").innerHTML = "\
-            <button onclick=\"getNewSimulation()\" id=\"newSim-btn\">New Simulation</button>\
-            <button onclick=\"shutdown()\">Shutdown</button>"
+            <button onclick=\"getNewSimulation()\" class=\"btn btn-success\" id=\"newSim-btn\">New Simulation</button>\
+            <button onclick=\"shutdown()\" class=\"btn btn-danger\">Shutdown</button>"
         }
     }
     // Send request
@@ -91,9 +90,45 @@ function getInfo() {
         var data = JSON.parse(this.response);
         console.log(data)
         if (!checkError(data)) {
-            document.getElementById("sim-info").innerHTML = "<pre>" + JSON.stringify(data.info, null, 2) + "</pre>"
+            document.getElementById("sim-overview").innerHTML = "<pre>" + JSON.stringify(data.info, null, 2) + "</pre>"
+            document.getElementById("last-update").innerHTML = "Last updated: " + Date.now().toLocaleString()
         }
     }
     // Send request
     request.send();
+}
+
+// runSimulation sends a request for the server to run the simualation
+function runSimulation() {
+    console.log("Running Simulation")
+    document.getElementById("run-btn").disabled = true
+    document.getElementById("run-btn").innerHTML = "\
+    <div class=\"spinner-border text-dark\" role=\"status\">\
+        <span class=\"sr-only\">Loading...</span>\
+    </div>"
+
+    var url = "http://localhost:8080/simulation/run/" + window.simKey
+
+    var request = new XMLHttpRequest();
+    request.open("POST", url, true);
+    
+
+    request.onload = function () {
+    
+        var data = JSON.parse(this.response);
+        console.log(data)
+        if (!checkError(data)) {
+            document.getElementById("run-btn").disabled = false
+            document.getElementById("run-btn").innerHTML = "Run"
+            console.log("Simulation ran")
+            getInfo()
+        }
+    }
+
+    noOfSteps = document.getElementsByName("noOfSteps")[0].value
+
+    // Send request
+    request.send(JSON.stringify(
+        {steps: noOfSteps}
+    ));;
 }
