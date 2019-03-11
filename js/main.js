@@ -28,13 +28,43 @@ function getNewSimulation() {
         if (!checkError(data)) {
             window.simKey = data.key
             document.getElementById("sim-id").innerHTML = window.simKey
+            document.getElementById("bar-btns").innerHTML = "\
+            <button onclick=\"removeSimulation()\" id=\"newSim-btn\">Remove Simulation</button>\
+            <button onclick=\"shutdown()\">Shutdown</button>"
+            console.log("Change btn")
         }
     }
     // Send request
-    request.send(JSON.stringify({
-        environment: "resources/test.shp"
-    }));
+    request.send(JSON.stringify(
+        {environment: "resources/test.shp"}
+    ));
 
+}
+
+// removeSimulation sends a request to remove the simualation from
+// the server.
+function removeSimulation() {
+    var request = new XMLHttpRequest();
+
+    var url = "http://localhost:8080/simulation/remove/" + window.simKey
+
+    request.open("GET", url, true);
+    request.setRequestHeader('Content-Type', 'application/json');
+    
+
+    request.onload = function () {
+    
+        var data = JSON.parse(this.response);
+        console.log(data)
+        if (!checkError(data)) {
+            document.getElementById("sim-id").innerHTML = "-"
+            document.getElementById("bar-btns").innerHTML = "\
+            <button onclick=\"getNewSimulation()\" id=\"newSim-btn\">New Simulation</button>\
+            <button onclick=\"shutdown()\">Shutdown</button>"
+        }
+    }
+    // Send request
+    request.send();
 }
 
 // shutdown sends a request to shutdown the server.
@@ -46,6 +76,7 @@ function shutdown() {
     request.send();
 }
 
+// getInfo tries to get the information about the simulation in a json string
 function getInfo() {
     console.log("Getting Simulation Info");
 
@@ -60,7 +91,7 @@ function getInfo() {
         var data = JSON.parse(this.response);
         console.log(data)
         if (!checkError(data)) {
-            document.getElementById("sim-info").innerHTML = JSON.stringify(data.info, null, 2);
+            document.getElementById("sim-info").innerHTML = "<pre>" + JSON.stringify(data.info, null, 2) + "</pre>"
         }
     }
     // Send request
