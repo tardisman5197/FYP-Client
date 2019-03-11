@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <link rel="icon" type="image/x-icon" href="../favicon.ico" />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/main.css"/>
     <script src="../js/main.js"></script>
     <title>FYP-Client</title>
 </head>
+
 <body>
-    <nav class="navbar navbar-expand-lg text-white navbar-dark bg-dark">
+    <nav class="navbar text-white navbar-dark bg-dark">
         <div id="sim-id">Simulation: <strong> - </strong></div>
         <div id="bar-btns">
             <button onclick="getNewSimulation()" class="btn btn-success" id="newSim-btn">New Sim</button>
@@ -15,50 +19,57 @@
         </div>
     </nav>
     <div class="container-fluid">
-        <div class="row" id="sim-info">   
-            <div class="card bg-light">
+        <div class="row" id="sim-info">
+            <div class="col-md-12">
+                <div class="card bg-light">
                     <div class="row no-gutters">
-                        <div class="col-md-8" id="sim-img">
-                        <img src="../img/placeholder.jpg" class="card-img" alt="simulation image">
+                        <div class="col-md-8">
+                            <img src="../img/placeholder.jpg" class="card-img" alt="simulation image" id="sim-img">
                         </div>
                         <div class="col-md-4">
-                        <div class="card-body">
-                            <h5 class="card-title">Simulation Information</h5>
-                            <p class="card-text" id="sim-overview"></p>
-                            <p class="card-text"><small class="text-muted" id="last-update">Last updated: Never</small></p>
+                            <div class="card-body">
+                                <h5 class="card-title">Simulation Information</h5>
+                                <p class="card-text" id="sim-overview"></p>
+                                <p class="card-text"><small class="text-muted" id="last-update">Last updated:
+                                        Never</small>
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="card bg-light">
-                <div class="btn-toolbar mb-3" role="toolbar">
-                    <div class="btn-group mr-2" role="group">
-                        <button class="btn btn-primary" id="run-btn" onclick="runSimulation()">Run</button>
-                        <button class="btn btn-info" id="stop-btn" onclick="stopSimulation()">Stop</button>
-                    </div>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text">Number Of Steps</div>
+            <div class="col-md-6">
+                <div class="card bg-light">
+                    <div class="btn-toolbar mb-3" role="toolbar">
+                        <div class="btn-group mr-2" role="group">
+                            <button class="btn btn-primary" id="run-btn" onclick="runSimulation()">Run</button>
+                            <button class="btn btn-info" id="stop-btn" onclick="stopSimulation()">Stop</button>
                         </div>
-                        <input type="number" min=0 class="form-control" name="noOfSteps" placeholder="(e.g. 10)">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">Number Of Steps</div>
+                            </div>
+                            <input type="number" min=0 class="form-control" name="noOfSteps" placeholder="(e.g. 10)">
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="card bg-light">
-                <div class="btn-toolbar mb-3" role="toolbar">
-                    <div class="btn-group mr-2" role="group" >
-                        <button class="btn btn-secondary" id="add-vehicle-btn" onclick="addVehicle()">Add Vehicle</button>
-                    </div>
-                    <div class="input-group">
+            <div class="col-md-6">
+                <div class="card bg-light">
+                    <div class="btn-toolbar mb-3" role="toolbar">
+                        <div class="btn-group mr-2" role="group">
+                            <button class="btn btn-secondary" id="add-vehicle-btn" onclick="addVehicle()">Add
+                                Vehicle</button>
+                        </div>
+                        <div class="input-group">
                             <div class="input-group-prepend">
                                 <div class="input-group-text" id="other">Other</div>
                             </div>
                             <input type="text" class="form-control" placeholder="other">
                         </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -66,4 +77,5 @@
     <div class="container" id="error-text">
     </div>
 </body>
+
 </html>

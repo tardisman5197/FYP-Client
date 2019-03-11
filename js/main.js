@@ -90,12 +90,59 @@ function getInfo() {
         var data = JSON.parse(this.response);
         console.log(data)
         if (!checkError(data)) {
-            document.getElementById("sim-overview").innerHTML = "<pre>" + JSON.stringify(data.info, null, 2) + "</pre>"
-            document.getElementById("last-update").innerHTML = "Last updated: " + Date.now().toLocaleString()
+            // get the number of agents in the info
+            var noOfAgents
+            if (data.info.agents) {
+                noOfAgents = data.info.agents.length
+            } else {
+                noOfAgents = 0
+            }
+
+            // document.getElementById("sim-overview").innerHTML = "<pre>" + JSON.stringify(data.info, null, 2) + "</pre>"
+            document.getElementById("sim-overview").innerHTML = "\
+            <table>\
+                <tbody>\
+                    <tr>\
+                        <td>Number Of Agents: </td>\
+                        <td>"+ noOfAgents + "</td>\
+                    </tr>\
+                    <tr>\
+                        <td>Current Tick: </td>\
+                        <td>"+ data.info.tick + "</td>\
+                    </tr>\
+                </tbody>\
+            </table>"
+            document.getElementById("last-update").innerHTML = "Last updated: " + new Date().toLocaleString()
+            getImage()
         }
     }
     // Send request
     request.send();
+}
+
+// getImage sends a request to get an image of the simualtion.
+function getImage() {
+    console.log("Getting Simulation Image");
+
+    var url = "http://localhost:8080/simulation/view/" + window.simKey
+
+    var request = new XMLHttpRequest();
+    request.open("POST", url, true);
+    
+
+    request.onload = function () {
+    
+        var data = JSON.parse(this.response);
+        console.log(data)
+        if (!checkError(data)) {
+            document.getElementById("sim-img").src = "data:image/jpg;base64," + data.image
+        }
+    }
+    // Send request
+    request.send(JSON.stringify({
+            cameraPosition: [],
+            cameraDirection: []
+    }));
 }
 
 // runSimulation sends a request for the server to run the simualation
