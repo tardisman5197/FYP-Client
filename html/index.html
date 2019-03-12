@@ -5,7 +5,7 @@
     <link rel="icon" type="image/x-icon" href="../favicon.ico" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="../css/main.css"/>
+    <link rel="stylesheet" href="../css/main.css" />
     <script src="../js/main.js"></script>
     <title>FYP-Client</title>
 </head>
@@ -65,14 +65,70 @@
                         </div>
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <div class="input-group-text" id="other">Other</div>
+                                <div class="input-group-text">Start Location</div>
                             </div>
-                            <input type="text" class="form-control" placeholder="other">
+                            <input type="number" class="form-control" id="start-loc-x" placeholder="x" value=0.0>
+                            <input type="number" class="form-control" id="start-loc-y" placeholder="y" value=0.0>
+                        </div>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">Start Speed</div>
+                            </div>
+                            <input type="number" class="form-control" id="start-speed" placeholder="(e.g. 1.0)"
+                                value=0.0>
+                        </div>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">Max Speed</div>
+                            </div>
+                            <input type="number" class="form-control" id="max-speed" placeholder="(e.g. 10.0)"
+                                value=8.0>
+                        </div>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">Acceleration</div>
+                            </div>
+                            <input type="number" class="form-control" id="acceleration" placeholder="(e.g. 3.0)"
+                                value=3.0>
+                        </div>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">Deceleration</div>
+                            </div>
+                            <input type="number" class="form-control" id="deceleration" placeholder="(e.g. 2.0)"
+                                value=3.0>
+                        </div>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">Frequency</div>
+                            </div>
+                            <input type="number" class="form-control" id="frequency" placeholder="(e.g. 5)" value=0>
+                        </div>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">Agent Type</div>
+                            </div>
+                            <input type="text" class="form-control" id="agent-type" placeholder="vehicle"
+                                value="vehicle">
+                        </div>
+                        <div id="route-input">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">Route</div>
+                                </div>
+                                <button class="btn btn-secondary" onclick="addRoute()">+</button>
+                            </div>
+                            <div class="input-group">
+                                <button class="btn btn-danger" onclick="removeRoute(this)">x</button>
+                                <input type="number" class="form-control route-x" placeholder="x" value=0.0>
+                                <input type="number" class="form-control route-y" placeholder="y" value=0.0>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
     <div class="container" id="error-text">
     </div>

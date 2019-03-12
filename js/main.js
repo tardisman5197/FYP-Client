@@ -19,15 +19,15 @@ function getNewSimulation() {
 
     request.open("POST", "http://localhost:8080/simulation/new", true);
     request.setRequestHeader('Content-Type', 'application/json');
-    
+
 
     request.onload = function () {
-    
+
         var data = JSON.parse(this.response);
         console.log(data)
         if (!checkError(data)) {
             window.simKey = data.key
-            document.getElementById("sim-id").innerHTML = "Simulation: <strong>" + window.simKey +"</strong>"
+            document.getElementById("sim-id").innerHTML = "Simulation: <strong>" + window.simKey + "</strong>"
             document.getElementById("bar-btns").innerHTML = "\
             <button onclick=\"removeSimulation()\" class=\"btn btn-warning\" id=\"newSim-btn\">Remove Simulation</button>\
             <button onclick=\"shutdown()\" class=\"btn btn-danger\">Shutdown</button>"
@@ -35,7 +35,7 @@ function getNewSimulation() {
     }
     // Send request
     request.send(JSON.stringify(
-        {environment: "resources/test.shp"}
+        { environment: "resources/test.shp" }
     ));
 
 }
@@ -49,10 +49,10 @@ function removeSimulation() {
 
     request.open("GET", url, true);
     request.setRequestHeader('Content-Type', 'application/json');
-    
+
 
     request.onload = function () {
-    
+
         var data = JSON.parse(this.response);
         console.log(data)
         if (!checkError(data)) {
@@ -83,10 +83,10 @@ function getInfo() {
 
     var request = new XMLHttpRequest();
     request.open("GET", url, true);
-    
+
 
     request.onload = function () {
-    
+
         var data = JSON.parse(this.response);
         console.log(data)
         if (!checkError(data)) {
@@ -128,10 +128,10 @@ function getImage() {
 
     var request = new XMLHttpRequest();
     request.open("POST", url, true);
-    
+
 
     request.onload = function () {
-    
+
         var data = JSON.parse(this.response);
         console.log(data)
         if (!checkError(data)) {
@@ -140,8 +140,8 @@ function getImage() {
     }
     // Send request
     request.send(JSON.stringify({
-            cameraPosition: [],
-            cameraDirection: []
+        cameraPosition: [],
+        cameraDirection: []
     }));
 }
 
@@ -158,10 +158,10 @@ function runSimulation() {
 
     var request = new XMLHttpRequest();
     request.open("POST", url, true);
-    
+
 
     request.onload = function () {
-    
+
         var data = JSON.parse(this.response);
         console.log(data)
         if (!checkError(data)) {
@@ -172,10 +172,89 @@ function runSimulation() {
         }
     }
 
-    noOfSteps = document.getElementsByName("noOfSteps")[0].value
+    noOfSteps = parseFloat(document.getElementsByName("noOfSteps")[0].value)
 
     // Send request
     request.send(JSON.stringify(
-        {steps: noOfSteps}
+        { steps: noOfSteps }
     ));;
+}
+
+// addRoute adds more input boxes for a vehicle route
+function addRoute() {
+    var htmlStr = "\
+    <div class=\"input-group\">\
+        <button class=\"btn btn-danger\" onclick=\"removeRoute(this)\">x</button>\
+        <input type=\"number\" class=\"form-control route-x\" placeholder=\"x\" value=0.0>\
+        <input type=\"number\" class=\"form-control route-y\" placeholder=\"y\" value=0.0>\
+    </div>"
+    document.getElementById("route-input").insertAdjacentHTML("beforeend", htmlStr)
+}
+
+// removeRoute destroys a route input line
+function removeRoute(btn) {
+    var toRemvoe = btn.parentNode
+    toRemvoe.parentNode.removeChild(toRemvoe)
+}
+
+// addVehicle sends a request to add a vehicle
+// with the paramaters given
+function addVehicle() {
+    var request = new XMLHttpRequest();
+
+    var url = "http://localhost:8080/simulation/add/" + window.simKey
+
+    request.open("POST", url, true);
+    request.setRequestHeader('Content-Type', 'application/json');
+
+
+    request.onload = function () {
+        var data = JSON.parse(this.response);
+        console.log(data)
+        if (!checkError(data)) {
+            getInfo()
+            getImage()
+        }
+    }
+
+    var startLoc = [
+        parseFloat(document.getElementById("start-loc-x").value),
+        parseFloat(document.getElementById("start-loc-y").value)
+    ]
+    var startSpeed = parseFloat(document.getElementById("start-speed").value)
+    var maxSpeed = parseFloat(document.getElementById("max-speed").value)
+    var acc = parseFloat(document.getElementById("acceleration").value)
+    var dec = parseFloat(document.getElementById("deceleration").value)
+    var type = document.getElementById("agent-type").value
+    var freq = parseFloat(document.getElementById("frequency").value)
+    var routeX = document.getElementsByClassName("route-x")
+    var routeY = document.getElementsByClassName("route-y")
+
+    var route =[]
+    for (var i = 0; i<routeX.length; i++) {
+        route.push([
+            parseFloat(routeX[i].value),
+            parseFloat(routeY[i].value)
+        ])
+    }
+    console.log(route)
+
+    var jsonStr = JSON.stringify(
+        {
+            agents: [{
+                startLocation: startLoc,
+                startSpeed: startSpeed,
+                maxSpeed: maxSpeed,
+                acceleration: acc,
+                deceleration: dec,
+                type: type,
+                frequency: freq,
+                route: route
+            }]
+        }
+    )
+    console.log(jsonStr)
+
+    // Send request
+    request.send(jsonStr);
 }
