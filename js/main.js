@@ -35,7 +35,13 @@ function getNewSimulation() {
     }
     // Send request
     request.send(JSON.stringify(
-        { environment: "resources/test.shp" }
+        { 
+            environment: "resources/intersect.shp",
+            lights: [
+                [50.0, 50.0],
+                [55.0, 50.0]
+            ]
+        }
     ));
 
 }
@@ -99,7 +105,8 @@ function getInfo() {
             }
 
             // document.getElementById("sim-overview").innerHTML = "<pre>" + JSON.stringify(data.info, null, 2) + "</pre>"
-            document.getElementById("sim-overview").innerHTML = "\
+            
+            htmlStr = "\
             <table>\
                 <tbody>\
                     <tr>\
@@ -109,9 +116,25 @@ function getInfo() {
                     <tr>\
                         <td>Current Tick: </td>\
                         <td>"+ data.info.tick + "</td>\
-                    </tr>\
+                    </tr>"
+
+            if (data.info.environment.lights) {
+                htmlStr += "<tr><td>Lights:</td><td>ID</td><td>Position</td><td>Stop</td></tr>"
+                for (var i=0; i<data.info.environment.lights.length; i++) {
+                    htmlStr += "<tr><td></td>\
+                    <td>"+data.info.environment.lights[i].id+"</td>\
+                    <td>"+data.info.environment.lights[i].position+"</td>\
+                    <td>"+data.info.environment.lights[i].stop+"</td>\
+                    <td><button class=\"btn btn-secondary\" onclick=\"updateLight("+data.info.environment.lights[i].id+","+!data.info.environment.lights[i].stop+")\">Toggle</button></td>\
+                    </tr>"
+                }
+            }
+
+            
+            htmlStr += "\
                 </tbody>\
             </table>"
+            document.getElementById("sim-overview").innerHTML = htmlStr
             document.getElementById("last-update").innerHTML = "Last updated: " + new Date().toLocaleString()
             getImage()
         }
@@ -140,8 +163,8 @@ function getImage() {
     }
     // Send request
     request.send(JSON.stringify({
-        cameraPosition: [],
-        cameraDirection: []
+        cameraPosition: [70,10,70],
+        cameraDirection: [50,0,50]
     }));
 }
 
@@ -251,6 +274,36 @@ function addVehicle() {
                 frequency: freq,
                 route: route
             }]
+        }
+    )
+    console.log(jsonStr)
+
+    // Send request
+    request.send(jsonStr);
+}
+
+// updateLight sends a request to update a traffic light's value
+function updateLight(id, stop) {
+    var request = new XMLHttpRequest();
+
+    var url = "http://localhost:8080/simulation/light/update/" + window.simKey
+
+    request.open("POST", url, true);
+    request.setRequestHeader('Content-Type', 'application/json');
+
+
+    request.onload = function () {
+        var data = JSON.parse(this.response);
+        console.log(data)
+        if (!checkError(data)) {
+            getInfo()
+        }
+    }
+
+    var jsonStr = JSON.stringify(
+        {
+            stop: stop,
+            id: id
         }
     )
     console.log(jsonStr)
