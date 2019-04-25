@@ -31,6 +31,9 @@ function getNewSimulation() {
             document.getElementById("bar-btns").innerHTML = "\
             <button onclick=\"removeSimulation()\" class=\"btn btn-warning\" id=\"newSim-btn\">Remove Simulation</button>\
             <button onclick=\"shutdown()\" class=\"btn btn-danger\">Shutdown</button>"
+
+            getInfo()
+            getImage()
         }
     }
     // Send request
@@ -304,6 +307,60 @@ function updateLight(id, stop) {
         {
             stop: stop,
             id: id
+        }
+    )
+    console.log(jsonStr)
+
+    // Send request
+    request.send(jsonStr);
+}
+
+function demoSetup() {
+    var request = new XMLHttpRequest();
+
+    var url = "http://localhost:8080/simulation/add/" + window.simKey
+
+    request.open("POST", url, true);
+    request.setRequestHeader('Content-Type', 'application/json');
+
+
+    request.onload = function () {
+        var data = JSON.parse(this.response);
+        console.log(data)
+        if (!checkError(data)) {
+            getInfo()
+            getImage()
+        }
+    }
+
+    var routes = [
+        [[50.0, 0.0],[50.0, 50.0],[50.0, 100.0]],
+        [[50.0, 0.0],[50.0, 50.0],[0.0, 50.0]],
+        [[50.0, 0.0],[50.0, 50.0],[55.0, 55.0],[100.0, 50.0]],
+        [[100.0, 50.0],[55.0, 50.0],[0.0, 50.0]],
+        [[100.0, 50.0],[55.0, 50.0],[50.0, 0.0]],
+        [[100.0, 50.0],[55.0, 50.0],[50.0, 55.0],[50.0, 100.0]]
+    ]
+
+    var agents = []
+    
+    for (var i=0; i<routes.length; i++) {
+        var agent = {}
+        agent.startLocation = routes[i][0]
+        agent.startSpeed = 0.0
+        agent.maxSpeed = 8.0
+        agent.acceleration = 3.0
+        agent.deceleration = 3.0
+        agent.type = "vehicle"
+        agent.frequency = (i%3)+8
+        agent.route = routes[i]
+
+        agents.push(agent)
+    }
+
+    var jsonStr = JSON.stringify(
+        {
+            agents: agents
         }
     )
     console.log(jsonStr)
