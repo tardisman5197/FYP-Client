@@ -34,4 +34,4 @@ An example of this command could be.
 http-server . -p 9999 --cors
 ```
 
-This commnad when run from within the repo, would make the web client accesable from a browser at `localhost:9999`.
+This command when run from within the repo, would make the web client accessible from a browser at `localhost:9999`.
